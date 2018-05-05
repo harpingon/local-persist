@@ -92,13 +92,13 @@ func (driver localPersistDriver) List(req volume.Request) volume.Response {
 }
 
 func (driver localPersistDriver) Create(req volume.Request) volume.Response {
-    fmt.Print(white("%-18s", "Create Called... "))
+    fmt.Print(white("%-18s", "Create Called...\n "))
 
-    mountpoint := req.Options["mountpoint"]
-    if mountpoint == "" {
-        fmt.Printf("No %s option provided\n", blue("mountpoint"))
-        return volume.Response{ Err: fmt.Sprintf("The `mountpoint` option is required") }
-    }
+    mountpoint := path.Join(os.Getenv("LOCAL_PERSIST_ROOT"), os.Getenv("CLUSTER_NAME"), req.Name)
+    fmt.Println("---")
+    fmt.Println("LOCAL_PERSIST_ROOT:", os.Getenv("LOCAL_PERSIST_ROOT"))
+    fmt.Println("CLUSTER_NAME      :", os.Getenv("CLUSTER_NAME"))
+    fmt.Println("---")
 
     driver.mutex.Lock()
     defer driver.mutex.Unlock()

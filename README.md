@@ -87,12 +87,35 @@ Lastly, the `-v /path/to/store/json/for/restart/:/var/lib/docker/plugin-data/` p
 
 When the container is destroyed, etc, it will look at a file it created in `/var/lib/docker/plugin-data/` to recreate any volumes that had previously existed, so you want that JSON file to persist on the host. 
 
+## Specifying mount root and cluster name
+
+Run the plugin with environment variables LOCAL_PERSIST_ROOT and CLUSTER_NAME to create volume directories in the format:
+
+/LOCAL_PERSIST_ROOT/CLUSTER_NAME/volumename/
+
+This allows the driver to create areas on different kinds of shared storage. For example LOCAL_PERSIST_ROOT might be mounted as a cephfs system, or a CIFS mount, or NFS.
+
+The CLUSTER_NAME is used to separate volume mounts from different docker clusters. So if you have two swarms, and want to create 'myvolume' on each, this will work on the same shared storage.  
+
+E.g.
+
+/mnt/cephfs/cluster1/myvolume
+
+and
+
+/mnt/cephfs/cluster2/myvolume
+
+I did this because it allows me to experiment with different shared file systems without needing to write a specific volume driver for each.
+
+
+
+
 ## Usage: Creating Volumes
 
 Then to use, you can create a volume with this plugin (this example will be for a shared folder for images):
 
 ```shell
-docker volume create -d local-persist -o mountpoint=/data/images --name=images
+docker volume create -d local-persist --name=images
 ```
 
 Then if you create a container, you can connect it to this Volume:
