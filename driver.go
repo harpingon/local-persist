@@ -18,7 +18,7 @@ import (
 
 var (
     // red = color.New(color.FgRed).SprintfFunc()
-    // green = color.New(color.FgGreen).SprintfFunc()
+    green = color.New(color.FgGreen).SprintfFunc()
     yellow = color.New(color.FgYellow).SprintfFunc()
     cyan = color.New(color.FgCyan).SprintfFunc()
     blue = color.New(color.FgBlue).SprintfFunc()
@@ -131,6 +131,11 @@ func (driver localPersistDriver) Remove(req volume.Request) volume.Response {
     driver.mutex.Lock()
     defer driver.mutex.Unlock()
 
+    mountpoint := path.Join(os.Getenv("LOCAL_PERSIST_ROOT"), os.Getenv("CLUSTER_NAME"), req.Name)
+    _, exists := os.LookupEnv("LOCAL_PERSIST_CLEAR")
+    if exists {
+        os.RemoveAll(mountpoint)
+    }
     delete(driver.volumes, req.Name)
 
     err := driver.saveState(driver.volumes)
@@ -139,6 +144,11 @@ func (driver localPersistDriver) Remove(req volume.Request) volume.Response {
     }
 
     fmt.Printf("Removed %s\n", cyan(req.Name))
+    if exists {
+       fmt.Printf("Volume %s wiped from %s\n", magenta(req.Name), magenta(mountpoint))
+    } else {
+       fmt.Printf("Volume %s retained under %s\n", green(req.Name), green(mountpoint))
+    }
 
     return volume.Response{}
 }

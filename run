@@ -1,0 +1,1 @@
+LOCAL_PERSIST_ROOT=/ceph CLUSTER_NAME=t1 LOCAL_PERSIST_CLEAR=1 bin/linux/amd64/local-persist

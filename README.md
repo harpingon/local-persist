@@ -107,6 +107,12 @@ and
 
 I did this because it allows me to experiment with different shared file systems without needing to write a specific volume driver for each.
 
+Set variable LOCAL_PERSIST_CLEAR to anything to have the volume wiped on remove, just like the local driver.
+
+Examples:
+
+LOCAL_PERSIST_ROOT=/ceph CLUSTER_NAME=t1 LOCAL_PERSIST_CLEAR=1 bin/linux/amd64/local-persist
+LOCAL_PERSIST_ROOT=/mnt/nfsroot CLUSTER_NAME=swarm1 bin/linux/amd64/local-persist
 
 
 
