@@ -5,6 +5,9 @@ Wants=docker.service
 
 [Service]
 TimeoutStartSec=0
+Environment=LOCAL_PERSIST_ROOT=/ceph
+Environment=CLUSTER_NAME=ghdacsds1
+Environment=LOCAL_PERSIST_CLEAR=YES
 ExecStart=/usr/bin/docker-volume-local-persist
 
 [Install]
